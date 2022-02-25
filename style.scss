@@ -1,0 +1,152 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+html {
+  box-sizing: border-box;
+  background-color: rgb(20, 33, 73);
+  font-family: "Lato", sans-serif;
+  color: white;
+}
+
+#main-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+#main-header {
+  font-size: 5rem;
+  margin-bottom: 3vh;
+}
+
+#computer-choice-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  h1 {
+    margin-bottom: 2vh;
+  }
+
+  div {
+    margin-bottom: 4vh;
+    background-image: url(images/question-mark.png);
+    background-color: white;
+    border-color: white;
+  }
+}
+
+#user-choice-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  h1 {
+    margin-bottom: 4vh;
+  }
+
+  div {
+    display: flex;
+    justify-content: center;
+    gap: 2.5em;
+    margin-bottom: 2vh;
+
+    transition-duration: 200ms;
+    transition-property: transform, box-shadow;
+
+    div:nth-child(1) {
+      background-image: url(images/paper.png);
+      background-color: red;
+      border-color: red;
+    }
+
+    div:nth-child(2) {
+      background-image: url(images/rock.png);
+      background-color: rgb(110, 106, 106);
+      border-color: rgb(110, 106, 106);
+    }
+
+    div:nth-child(3) {
+      background-image: url(images/scissors.png);
+      background-color: blue;
+      border-color: blue;
+    }
+
+    div:hover {
+      transform: scale(1.1);
+      box-shadow: rgb(85, 91, 255) 0px 0px 0px 3px,
+        rgb(31, 193, 27) 0px 0px 0px 6px, rgb(255, 217, 19) 0px 0px 0px 9px,
+        rgb(255, 156, 85) 0px 0px 0px 12px, rgb(255, 85, 85) 0px 0px 0px 15px;
+    }
+  }
+}
+
+#scoring-container {
+  display: flex;
+  font-size: 20px;
+  flex-wrap: wrap;
+}
+
+.results {
+  font-size: 30px;
+  margin-bottom: 3vh;
+}
+
+.choices {
+  border-radius: 4%;
+  padding: 6vw;
+  border: 1rem solid black;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: contain;
+  background-color: springgreen;
+
+  box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
+}
+
+.rainbow-color {
+  animation-name: bgColor;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  background-color: red;
+  border-color: red;
+}
+
+@keyframes bgColor {
+  0% {
+    background-color: red;
+    border-color: red;
+  }
+  25% {
+    background-color: #ffa500;
+    border-color: #ffa500;
+  }
+  50% {
+    background-color: #ffff00;
+    border-color: #ffff00;
+  }
+  50% {
+    background-color: #7fff00;
+    border-color: #7fff00;
+  }
+  75% {
+    background-color: #00ffff;
+    border-color: #00ffff;
+  }
+  100% {
+    background-color: #0000ff;
+    border-color: #0000ff;
+  }
+}

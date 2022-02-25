@@ -5,10 +5,42 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Paper Rock Scissors</title>
-    <script src="script.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
   </head>
   <body>
-    <h1>Paper Rock Scissors!</h1>
+    <div id="main-content">
+      <h1 id="main-header">Paper Rock Scissors</h1>
+      <div id="computer-choice-container">
+        <h1>Computer Choice</h1>
+        <div id="computerChoice" class="choices"></div>
+      </div>
+      <div id="user-choice-container">
+        <h1>What will You Choose?</h1>
+        <div>
+          <div id="playerChoiceOne" class="choices"></div>
+          <div id="playerChoiceTwo" class="choices"></div>
+          <div id="playerChoiceThree" class="choices"></div>
+        </div>
+        <div id="round" class="results">
+          <p id="currentRound">Round: 0</p>
+          <p id="roundResult">Round Result:</p>
+        </div>
+
+        <div id="scoring-container">
+          <p>Format: Best of Five</p>
+          <p>Player Score: <span id="spanPlayerScore">0</span></p>
+          <p>Computer Score: <span id="spanComputerScore">0</span></p>
+          <p>ties: <span id="spanTies">0</span></p>
+        </div>
+        <p id="matchResult" class="results">Match Result:</p>
+      </div>
+    </div>
   </body>
 </html>

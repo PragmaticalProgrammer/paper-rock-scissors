@@ -1,202 +1,221 @@
-let playerScore = 0;
-let computerScore = 0;
-let ties = 0;
-let rounds = 0;
+function resetRoundResult(roundResult) {
+  roundResult.textContent = "Round Result:";
+}
 
-function result(computerObjet, player, roundResult) {
-  let computer = Math.floor(Math.random() * 3);
-  choices = ["paper", "rock", "scissors"];
+function resetMatchResult(matchResult) {
+  matchResult.textContent = "Match Result:";
+}
+function modifyMatchResult(matchResult, scores, round) {
+  if (round == 5) {
+    if (scores.get("userScore") > scores.get("computerScore")) {
+      matchResult.textContent = "Match Result: User Wins!";
+    } else if (scores.get("userScore") < scores.get("computerScore")) {
+      matchResult.textContent = "Match Result: Computer Wins!";
+    } else {
+      matchResult.textContent = "Match Result: It was a tie!";
+    }
+  }
+}
 
+function modifyRoundResult(roundResult, computer, user, result) {
+  user = user.charAt(0).toUpperCase() + user.slice(1);
+  computer = computer.charAt(0).toUpperCase() + computer.slice(1);
+
+  if (result == 1) {
+    roundResult.textContent = `Round Result: You win! ${user} beats ${computer}.`;
+  } else if (result == 2) {
+    roundResult.textContent = `Round Result: You lose! ${computer} beats ${user}.`;
+  } else {
+    roundResult.textContent = `Round Result: It's a tie!`;
+  }
+}
+
+function modifyScores(spanComputerScore, spanUserScore, spanTies, scores) {
+  spanComputerScore.textContent = scores.get("computerScore");
+  spanUserScore.textContent = scores.get("userScore");
+  spanTies.textContent = scores.get("ties");
+}
+
+function calculateRound(player, computer) {
   if (
-    (player === "paper" && choices[computer] === "rock") ||
-    (player == "rock" && choices[computer] === "scissors") ||
-    (player === "scissors" && choices[computer] === "paper")
+    (player === "paper" && computer === "rock") ||
+    (player == "rock" && computer === "scissors") ||
+    (player === "scissors" && computer === "paper")
   ) {
-    roundResult.textContent = `Round Result: You win, ${player} beats ${choices[computer]}`;
-    computerObjet.style.backgroundImage = `url(images/${choices[computer]}.png)`;
+    // player wins
     return 1;
-  } else if (player == choices[computer]) {
-    roundResult.textContent = `Round Result: It's a tie, you both picked ${player}`;
-    computerObjet.style.backgroundImage = `url(images/${choices[computer]}.png)`;
+  } else if (player == computer) {
+    // computer and player tie
     return 3;
   } else {
-    computerObjet.style.backgroundImage = `url(images/${choices[computer]}.png)`;
-    roundResult.textContent = `Round Result: You lose, ${choices[computer]} beats ${player}`;
+    // player loses
     return 2;
   }
 }
 
-function playGame(computer, player, status, roundResult) {
-  if (status) {
-    computer.classList.add("rainbow-color");
-    computer.style.backgroundImage = "url(images/question-mark.png)";
+function updateScore(scores, result, round) {
+  if (round == 1) {
+    scores.set("userScore", 0);
+    scores.set("computerScore", 0);
+    scores.set("ties", 0);
+  }
+
+  if (result == 1) {
+    scores.set("userScore", scores.get("userScore") + 1);
+  } else if (result == 2) {
+    scores.set("computerScore", scores.get("computerScore") + 1);
+  } else if (result == 3) {
+    scores.set("ties", scores.get("ties") + 1);
+  }
+
+  return scores;
+}
+
+function computerGenerator() {
+  choices = ["paper", "rock", "scissors"];
+  return choices[Math.floor(Math.random() * 3)];
+}
+
+function computerChoiceIcon(card, choice) {
+  card.style.backgroundImage = `url(images/${choice}.png)`;
+}
+
+function computerQuestionIcon(card) {
+  card.style.backgroundImage = `url(images/question-mark.png)`;
+}
+
+function rainbowColor(card, conditional) {
+  if (conditional == true) {
+    card.classList.add("rainbow-color");
   } else {
-    computer.classList.remove("rainbow-color");
-    return result(computer, player, roundResult);
+    card.classList.remove("rainbow-color");
   }
 }
 
-const computerChoice = document.querySelector("#computerChoice");
-const playerChoiceOne = document.querySelector("#playerChoiceOne");
-const playerChoiceTwo = document.querySelector("#playerChoiceTwo");
-const playerChoiceThree = document.querySelector("#playerChoiceThree");
-const spanPlayerScore = document.querySelector("#spanPlayerScore");
+function clickLockout(choiceOne, choiceTwo, choiceThree, conditional) {
+  if (conditional == true) {
+    choiceOne.style.pointerEvents = "none";
+    choiceTwo.style.pointerEvents = "none";
+    choiceThree.style.pointerEvents = "none";
+  } else {
+    choiceOne.style.pointerEvents = "auto";
+    choiceTwo.style.pointerEvents = "auto";
+    choiceThree.style.pointerEvents = "auto";
+  }
+}
+
+function modifyCurrentRound(round, currentRoundElement) {
+  if (round + 1 <= 5) {
+    round = round + 1;
+  } else {
+    round = 1;
+  }
+  currentRoundElement.textContent = `Round: ${round}`;
+  return round;
+}
+
+// This is selecting all the elements I need to modify in my program from the HTML with their
+// unique ID identifiers
+const computerChoiceCard = document.querySelector("#computerChoice");
+const userChoiceOne = document.querySelector("#userChoiceOne");
+const userChoiceTwo = document.querySelector("#userChoiceTwo");
+const userChoiceThree = document.querySelector("#userChoiceThree");
+const spanUserScore = document.querySelector("#spanPlayerScore");
 const spanComputerScore = document.querySelector("#spanComputerScore");
 const spanTies = document.querySelector("#spanTies");
 const currentRound = document.querySelector("#currentRound");
-const roundResult = document.querySelector("#roundResult");
+const roundResultElement = document.querySelector("#roundResult");
 const matchResult = document.querySelector("#matchResult");
 
-playerChoiceOne.addEventListener("click", function () {
-  playGame(computerChoice, "paper", true, roundResult);
-  roundResult.textContent = "Round Result: ";
-  playerChoiceOne.style.pointerEvents = "none";
-  playerChoiceTwo.style.pointerEvents = "none";
-  playerChoiceThree.style.pointerEvents = "none";
-  if (rounds + 1 > 5) {
-    playerScore = 0;
-    computerScore = 0;
-    ties = 0;
-    rounds = 0;
-    rounds++;
-  } else {
-    rounds++;
-  }
-  currentRound.textContent = `Round: ${rounds}`;
-  setTimeout(function () {
-    let score = playGame(computerChoice, "paper", false, roundResult);
-    if (score == 1) {
-      playerScore++;
-    } else if (score == 2) {
-      computerScore++;
-    } else {
-      ties++;
-    }
-    console.log(`player score: ${playerScore}`);
-    spanPlayerScore.textContent = playerScore;
-    console.log(`computer score: ${computerScore}`);
-    spanComputerScore.textContent = computerScore;
-    console.log(`ties: ${ties}`);
-    spanTies.textContent = ties;
-    playerChoiceOne.style.pointerEvents = "auto";
-    playerChoiceTwo.style.pointerEvents = "auto";
-    playerChoiceThree.style.pointerEvents = "auto";
+// map with all the score values referencabel from a single variable
+let scores = new Map();
+scores.set("userScore", 0);
+scores.set("computerScore", 0);
+scores.set("ties", 0);
 
-    if (rounds + 1 == 6) {
-      if (playerScore > computerScore) {
-        matchResult.textContent = "Match Result: PLAYER WINS!";
-      } else if (computerScore > playerScore) {
-        matchResult.textContent = "Match Result: Computer WINS!";
-      } else if (playerScore == computerScore || ties == 5) {
-        matchResult.textContent = "Match Result: It was a tie!";
-      }
-    }
+let round = 0;
+
+// repeated logic for each button, only the first has comments
+userChoiceOne.addEventListener("click", function () {
+  // Everything here happens as soon as you click
+  let userChoice = "paper";
+  // this stops user from making more choices while computer is making their selection
+  clickLockout(userChoiceOne, userChoiceTwo, userChoiceThree, true);
+  // this changes the background color of the computer card to rainbow for 3 seconds
+  rainbowColor(computerChoiceCard, true);
+  // changes the computer choice card icon to a questionmark while in shifting colors mode
+  computerQuestionIcon(computerChoiceCard);
+  // changes round
+  round = modifyCurrentRound(round, currentRound);
+  // this resets the round result and match result elements on click
+  resetRoundResult(roundResultElement);
+  resetMatchResult(matchResult);
+  // this setTimeout lets me pause the game while we play the animation of colors changing
+  // everything within setTimeout happens three seconds after you click
+  setTimeout(function () {
+    // generates a choice for the computer
+    let computerChoice = computerGenerator();
+    // this changes the icon to computer choice on the card
+    computerChoiceIcon(computerChoiceCard, computerChoice);
+    // this calculates the result of the round and stores it in a variable resault
+    result = calculateRound(userChoice, computerChoice);
+    // this updates the scores map with the result of the round
+    scores = updateScore(scores, result, round);
+    // this modifies the scores displayed to the user
+    modifyScores(spanComputerScore, spanUserScore, spanTies, scores);
+    // this modifies the round result displayed to the user
+    modifyRoundResult(roundResultElement, computerChoice, userChoice, result);
+    // this modifies the match result on the fifth and final round displayed for the user
+    modifyMatchResult(matchResult, scores, round);
+    // this disables clicking of other buttons while we play the color animation
+    clickLockout(userChoiceOne, userChoiceTwo, userChoiceThree, false);
+    // this gives the computer a shift of colors for it's background
+    rainbowColor(computerChoiceCard, false);
   }, 3000);
 });
 
-playerChoiceTwo.addEventListener("click", function () {
-  playGame(computerChoice, "rock", true, roundResult);
-  roundResult.textContent = "Round Result: ";
-  playerChoiceOne.style.pointerEvents = "none";
-  playerChoiceTwo.style.pointerEvents = "none";
-  playerChoiceThree.style.pointerEvents = "none";
-  if (rounds + 1 > 5) {
-    playerScore = 0;
-    computerScore = 0;
-    ties = 0;
-    rounds = 0;
-    rounds++;
-  } else {
-    rounds++;
-  }
-
-  currentRound.textContent = `Round: ${rounds}`;
+userChoiceTwo.addEventListener("click", function () {
+  let userChoice = "rock";
+  clickLockout(userChoiceOne, userChoiceTwo, userChoiceThree, true);
+  rainbowColor(computerChoiceCard, true);
+  computerQuestionIcon(computerChoiceCard);
+  round = modifyCurrentRound(round, currentRound);
+  resetRoundResult(roundResultElement);
+  resetMatchResult(matchResult);
   setTimeout(function () {
-    let score = playGame(computerChoice, "rock", false, roundResult);
-    if (score == 1) {
-      playerScore++;
-    } else if (score == 2) {
-      computerScore++;
-    } else {
-      ties++;
-    }
-    console.log(`player score: ${playerScore}`);
-    spanPlayerScore.textContent = playerScore;
-    console.log(`computer score: ${computerScore}`);
-    spanComputerScore.textContent = computerScore;
-    console.log(`ties: ${ties}`);
-    spanTies.textContent = ties;
-
-    if (rounds + 1 == 6) {
-      if (playerScore > computerScore) {
-        matchResult.textContent = "Match Result: PLAYER WINS!";
-      } else if (computerScore > playerScore) {
-        matchResult.textContent = "Match Result: Computer WINS!";
-      } else if (playerScore == computerScore || ties == 5) {
-        matchResult.textContent = "Match Result: It was a tie!";
-      }
-    }
-    playerChoiceOne.style.pointerEvents = "auto";
-    playerChoiceTwo.style.pointerEvents = "auto";
-    playerChoiceThree.style.pointerEvents = "auto";
+    let computerChoice = computerGenerator();
+    computerChoiceIcon(computerChoiceCard, computerChoice);
+    result = calculateRound(userChoice, computerChoice);
+    console.log(round);
+    scores = updateScore(scores, result, round);
+    modifyScores(spanComputerScore, spanUserScore, spanTies, scores);
+    console.log(scores);
+    modifyRoundResult(roundResultElement, computerChoice, userChoice, result);
+    modifyMatchResult(matchResult, scores, round);
+    clickLockout(userChoiceOne, userChoiceTwo, userChoiceThree, false);
+    rainbowColor(computerChoiceCard, false);
   }, 3000);
 });
 
-playerChoiceThree.addEventListener("click", function () {
-  playGame(computerChoice, "scissors", true, roundResult);
-  roundResult.textContent = "Round Result: ";
-  playerChoiceOne.style.pointerEvents = "none";
-  playerChoiceTwo.style.pointerEvents = "none";
-  playerChoiceThree.style.pointerEvents = "none";
-  if (rounds + 1 > 5) {
-    playerScore = 0;
-    computerScore = 0;
-    ties = 0;
-    rounds = 0;
-    rounds++;
-  } else {
-    rounds++;
-  }
-
-  currentRound.textContent = `Round: ${rounds}`;
+userChoiceThree.addEventListener("click", function () {
+  let userChoice = "scissors";
+  clickLockout(userChoiceOne, userChoiceTwo, userChoiceThree, true);
+  rainbowColor(computerChoiceCard, true);
+  computerQuestionIcon(computerChoiceCard);
+  round = modifyCurrentRound(round, currentRound);
+  resetRoundResult(roundResultElement);
+  resetMatchResult(matchResult);
   setTimeout(function () {
-    let score = playGame(computerChoice, "scissors", false, roundResult);
-    if (score == 1) {
-      playerScore++;
-    } else if (score == 2) {
-      computerScore++;
-    } else {
-      ties++;
-    }
-
-    if (rounds + 1 == 6) {
-      if (playerScore > computerScore) {
-        matchResult.textContent = "Match Result: PLAYER WINS!";
-      } else if (computerScore > playerScore) {
-        matchResult.textContent = "Match Result: Computer WINS!";
-      } else if (playerScore == computerScore || ties == 5) {
-        matchResult.textContent = "Match Result: It was a tie!";
-      }
-    }
-
-    console.log(`player score: ${playerScore}`);
-    spanPlayerScore.textContent = playerScore;
-    console.log(`computer score: ${computerScore}`);
-    spanComputerScore.textContent = computerScore;
-    console.log(`ties: ${ties}`);
-    spanTies.textContent = ties;
-
-    if (rounds + 1 == 6) {
-      if (playerScore > computerScore) {
-        matchResult.textContent = "Match Result: PLAYER WINS!";
-      } else if (computerScore > playerScore) {
-        matchResult.textContent = "Match Result: Computer WINS!";
-      } else if (playerScore == computerScore || ties == 5) {
-        matchResult.textContent = "Match Result: It was a tie!";
-      }
-    }
-    playerChoiceOne.style.pointerEvents = "auto";
-    playerChoiceTwo.style.pointerEvents = "auto";
-    playerChoiceThree.style.pointerEvents = "auto";
+    let computerChoice = computerGenerator();
+    computerChoiceIcon(computerChoiceCard, computerChoice);
+    result = calculateRound(userChoice, computerChoice);
+    console.log(round);
+    scores = updateScore(scores, result, round);
+    modifyScores(spanComputerScore, spanUserScore, spanTies, scores);
+    console.log(scores);
+    modifyRoundResult(roundResultElement, computerChoice, userChoice, result);
+    modifyMatchResult(matchResult, scores, round);
+    clickLockout(userChoiceOne, userChoiceTwo, userChoiceThree, false);
+    rainbowColor(computerChoiceCard, false);
   }, 3000);
 });

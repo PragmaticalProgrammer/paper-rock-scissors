@@ -186,10 +186,8 @@ userChoiceTwo.addEventListener("click", function () {
     let computerChoice = computerGenerator();
     computerChoiceIcon(computerChoiceCard, computerChoice);
     result = calculateRound(userChoice, computerChoice);
-    console.log(round);
     scores = updateScore(scores, result, round);
     modifyScores(spanComputerScore, spanUserScore, spanTies, scores);
-    console.log(scores);
     modifyRoundResult(roundResultElement, computerChoice, userChoice, result);
     modifyMatchResult(matchResult, scores, round);
     clickLockout(userChoiceOne, userChoiceTwo, userChoiceThree, false);
@@ -209,10 +207,8 @@ userChoiceThree.addEventListener("click", function () {
     let computerChoice = computerGenerator();
     computerChoiceIcon(computerChoiceCard, computerChoice);
     result = calculateRound(userChoice, computerChoice);
-    console.log(round);
     scores = updateScore(scores, result, round);
     modifyScores(spanComputerScore, spanUserScore, spanTies, scores);
-    console.log(scores);
     modifyRoundResult(roundResultElement, computerChoice, userChoice, result);
     modifyMatchResult(matchResult, scores, round);
     clickLockout(userChoiceOne, userChoiceTwo, userChoiceThree, false);
